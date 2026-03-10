@@ -40,6 +40,7 @@ function ST({children,sub,e,accent=C.t}){return<div style={{marginBottom:28}}><E
 
 /* ═══════════════════════════════════════════════════════
    VISION = Interactive Architecture Flow Trace
+   This is THE centerpiece. Click a flow, watch it light up.
    ═══════════════════════════════════════════════════════ */
 function VisionArch({e}){
   const[flow,setFlow]=useState(null);
@@ -382,22 +383,13 @@ function App(){
       {sections.map(s=><button key={s.id}className={`pill ${nav===s.id?"on":""}`}onClick={()=>document.getElementById(s.id)?.scrollIntoView({behavior:"smooth"})}>{s.l}</button>)}
     </nav>
 
-    {/* ═══ PROPOSAL BRIEF ═══ */}
-    <div style={{background:C.b,padding:"16px 24px"}}>
-      <div style={{maxWidth:860,margin:"0 auto"}}>
-        <E tag="div"e={ed}style={{fontSize:12,lineHeight:1.65,color:"#fff"}}>
-          <span style={{color:C.y,fontWeight:700}}>The proposal:</span> We adopt Cowork and a shared skills library starting with Marketing, then gradually extend to other teams. Autonomous tasks (coaching, qualification, SSR triggers) and object-specific work (opp briefs, account research, customer agents) stay on n8n where they already run 24/7.
-        </E>
-      </div>
-    </div>
-
     {/* ═══ 1. VISION = Interactive Architecture Trace ═══ */}
     <Sec id="vision" bg="#fff">
       <ST sub="Click a flow to trace how it moves through the system." e={ed}>The Vision</ST>
       <FI><VisionArch e={ed}/></FI>
     </Sec>
 
-    {/* ═══ 2. PROBLEM ═══ */}
+    {/* ═══ 2. PROBLEM = Specific architecture problems ═══ */}
     <Sec id="problem" bg={C.bg}>
       <ST e={ed}>Problems With Current Architecture</ST>
       <FI><div style={{display:"flex",flexDirection:"column",gap:10}}>
@@ -405,7 +397,7 @@ function App(){
           {title:"Every new capability is a full n8n workflow",
            desc:"Adding a new agent or action means building, testing, and maintaining an entire workflow from scratch. Each sub-action (deck gen, research, briefing) is its own workflow. This is the main bottleneck for shipping new capabilities.",
            severity:"high"},
-          {title:"Edge-case queries break with hand-built agentic harness",
+          {title:"Edge-cases queries break with hand-built agentic harness",
            desc:"The generalized GTM agent (\"ask anything about Salesforce\") doesn't handle edge cases well for every possible question shape. Cowork does this better because it has code execution + strong agentic harness, and can write and iterate queries on the fly. We need that same capability in our pipeline.",
            severity:"high"},
           {title:"Marketing agents are point solutions",
@@ -597,11 +589,11 @@ function App(){
       <div style={{position:"absolute",inset:0,backgroundImage:"radial-gradient(circle at 1px 1px, rgba(255,255,255,.03) 1px, transparent 0)",backgroundSize:"32px 32px"}}/>
       <div style={{position:"relative",zIndex:1}}>
         <E tag="p"e={ed}style={{maxWidth:560,margin:"0 auto",fontSize:14,color:"#9ca3af",lineHeight:1.75}}>
-          GTM Brain is changing how Bloomreach sells. This has worked for Revenue org because we brought insights, guidance, and execution to where people already worked.
+          GTM Brain is changing how Bloomreach sells. This has worked for Revenue org because we've brought insights, guidance, and execution to where people already worked. 
         </E>
          <br/>
         <E tag="p"e={ed}style={{maxWidth:560,margin:"0 auto",fontSize:14,color:"#9ca3af",lineHeight:1.75}}>
-          This time, we are proposing a new UI. We propose Cowork adoption starting with Marketing because A) Marketing GTM Brain stack isn't built yet, and B) Generalized questions needed in Marketing need a strong agentic harness to cover edge cases.
+          This time, we are proposing a new UI. We propose Cowork adoption starting with Marketing because A) Marketing GTM Brain stack isn't built yet, and B) Generalized questions needed in Marketing need a strong agentic harness to cover edge cases. 
         </E>
          <br/>
         <E tag="p"e={ed}style={{maxWidth:560,margin:"0 auto",fontSize:14,color:"#9ca3af",lineHeight:1.75}}>
