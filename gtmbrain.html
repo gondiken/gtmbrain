@@ -49,23 +49,23 @@ function VisionArch({e}){
 
   const flows={
     deck:{label:"Sales Deck",color:C.t,bypass:false,
-      desc:"AE asks Gem on Slack. Router sends it to the Opp path. Opp Brain pulls from Salesforce, calls, emails, and case studies. Deal Brief, Case Study, and Deck Generation skills structure the output: situation recap, mutual plan, and matched case studies. Deck delivered in Slack.",
-      sur:[0],paths:[0],brains:[0],skills:[0,1,7],conn:[0],ctx:[0,1],data:[0,1,2,5]},
+      desc:"AE asks Gem on Slack. Opp Brain pulls from Salesforce, calls, emails, and case studies. Deal Brief, Case Study, and Deck Generation skills structure the output: situation recap, mutual plan, and matched case studies. Deck delivered in Slack.",
+      sur:[0],brains:[0],skills:[0,1,7],conn:[0],ctx:[0,1],data:[0,1,2,5]},
     coach:{label:"Coach",color:C.am,bypass:false,
       desc:"Call ends. Webhook fires. Opp Brain pulls the transcript. Coaching skill scores performance against criteria. Specific feedback in Slack within hours. 4% MoM improvement trend.",
-      sur:[1],paths:[0],brains:[0],skills:[3],conn:[1],ctx:[1],data:[1,5]},
+      sur:[1],brains:[0],skills:[3],conn:[1],ctx:[1],data:[1,5]},
     sdr:{label:"AI SDR",color:C.gr,bypass:false,
-      desc:"Autonomous trigger fires on new inbound leads or scheduled cadence. Router sends it to the Marketing Accounts path. Marketing Accounts Brain pulls prospect context from Salesforce and enrichment data. AI SDR skill generates outreach through Salesloft. Sequences launched across regions.",
-      sur:[1],paths:[2],brains:[2],skills:[2,4],conn:[0,2,3],ctx:[0],data:[0,3,6]},
+      desc:"Autonomous trigger fires on new inbound leads or scheduled cadence. Marketing Accounts Brain pulls prospect context from Salesforce and enrichment data. AI SDR skill generates outreach through Salesloft. Sequences launched across regions.",
+      sur:[1],brains:[2],skills:[2,4],conn:[0,2,3],ctx:[0],data:[0,3,6]},
     pipeline:{label:"Pipeline Analysis",color:C.purple,bypass:true,
       desc:"Marketer opens Cowork and asks: \"What's our EMEA pipeline by source vs. last quarter?\" Cowork connects directly to Salesforce and engagement data through its own connectors. Analysis skill structures the response. No routing or MCP layer needed, this is a generalized question across the full GTM stack.",
-      sur:[2],paths:[],brains:[],skills:[5],conn:[0,5],ctx:[0,2],data:[0,6]},
+      sur:[2],brains:[],skills:[5],conn:[0,5],ctx:[0,2],data:[0,6]},
     winloss:{label:"Win/Loss",color:C.rd,bypass:true,
       desc:"Marketer opens Cowork and asks for a win/loss breakdown. Cowork pulls all closed opps, retrieves call transcripts and emails for context, and generates patterns, competitor breakdown, and product gap themes. Uses Analysis and Win/Loss skills. Not built yet, but easier to build directly in Cowork since it's a generalized query.",
-      sur:[2],paths:[],brains:[],skills:[5,6],conn:[0,1],ctx:[0,1,2,3],data:[0,1,2,5,6]},
+      sur:[2],brains:[],skills:[5,6],conn:[0,1],ctx:[0,1,2,3],data:[0,1,2,5,6]},
     adhoc:{label:"Ad-hoc",color:"#64748b",bypass:true,
       desc:"Someone opens Cowork on their laptop and asks any GTM question: \"What are our top pipeline risks?\" \"Which product gaps did travel prospects raise?\" \"Show me win rates by region.\" Cowork connects directly to data sources through its own connectors, using our shared skills and context engine. It skips domain routing and MCP servers entirely.",
-      sur:[2],paths:[],brains:[],skills:[0,1,3,5,6,7,8],conn:[0,1,2,3,4,5],ctx:[0,1,2,3],data:[0,1,2,3,4,5,6]},
+      sur:[2],brains:[],skills:[0,1,3,5,6,7,8],conn:[0,1,2,3,4,5],ctx:[0,1,2,3],data:[0,1,2,3,4,5,6]},
   };
 
   const isBypass=flow&&flows[flow]?.bypass;
@@ -121,11 +121,11 @@ function VisionArch({e}){
         className="fbtn"style={{borderColor:flow===k?f.color:"#e5e7eb",background:flow===k?f.color+"12":"#fff",color:flow===k?f.color:C.g}}>{f.label}</button>)}
     </div>
 
-    {/* Layer 1: User Surfaces */}
+    {/* Layer 1: How people use it */}
     <div style={{borderRadius:10,padding:"12px 14px",border:`1.5px solid ${C.t}30`,background:C.t+"08",marginBottom:2}}>
-      <div style={lbl}>User Surfaces</div>
+      <div style={lbl}>How People Use It</div>
       <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
-        {["Slack (/gem, /pearl, @gtm-assistant)","Autonomous","Cowork"].map((s,i)=>
+        {["Slack (/gem, /pearl)","Autonomous","Cowork"].map((s,i)=>
           <span key={i}style={nd(s,on("sur",i),false)}>{s}</span>
         )}
       </div>
@@ -136,28 +136,15 @@ function VisionArch({e}){
       <svg width="240"height="24"viewBox="0 0 240 24">
         <line x1="20"y1="12"x2="212"y2="12"stroke={fc()}strokeWidth="2"strokeDasharray="6 4"/>
         <polygon points="212,6 224,12 212,18"fill={fc()}/>
-        <text x="120"y="8"textAnchor="middle"fontSize="8"fill={fc()}fontFamily="Poppins"fontWeight="600">skips routing + MCP servers</text>
+        <text x="120"y="8"textAnchor="middle"fontSize="8"fill={fc()}fontFamily="Poppins"fontWeight="600">has its own connectors</text>
       </svg>
     </div>}
 
     {!isBypass&&arr(false)}
 
-    {/* Layer 2: Domain Routing — dimmed on bypass */}
-    <div style={{borderRadius:10,padding:"12px 14px",border:"1.5px solid #e5e7eb",background:"#fafafa",marginBottom:2,opacity:isBypass?.2:1,transition:"opacity .25s"}}>
-      <div style={lbl}>Domain Routing</div>
-      <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
-        {["Opp path","Customer path","Marketing Accounts path"].map((p,i)=>
-          <span key={i}style={nd(p,on("paths",i),isBypass)}>{p}</span>
-        )}
-      </div>
-    </div>
-
-    {!isBypass&&arr(false)}
-    {isBypass&&<div style={{height:6}}/>}
-
-    {/* Layer 3: MCP Servers — dimmed on bypass */}
+    {/* Layer 2: Domain (MCP) — dimmed on bypass */}
     <div style={{borderRadius:10,padding:"12px 14px",border:`1.5px solid ${C.gr}30`,background:C.gr+"06",marginBottom:2,opacity:isBypass?.2:1,transition:"opacity .25s"}}>
-      <div style={lbl}>MCP Servers</div>
+      <div style={lbl}>Domain (MCP)</div>
       <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
         {["Opp Brain","Customer Brain","Marketing Accounts Brain"].map((b,i)=>
           <span key={i}style={nd(b,on("brains",i),isBypass)}>{b}</span>
@@ -168,7 +155,7 @@ function VisionArch({e}){
     {!isBypass&&arrTriple()}
     {isBypass&&arr(false)}
 
-    {/* Layer 4: Skills + Connectors + Context Engine — NOT dimmed on bypass */}
+    {/* Layer 3: Skills + Connectors + Context Engine — NOT dimmed on bypass */}
     <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:2}}>
       <div style={{flex:"1 1 160px",borderRadius:10,padding:"10px 12px",border:`1.5px solid ${C.y}50`,background:C.y+"12"}}>
         <div style={lbl}>Skills (GitHub)</div>
@@ -184,7 +171,7 @@ function VisionArch({e}){
       </div>
       <div style={{flex:"1 1 160px",borderRadius:10,padding:"10px 12px",border:`1.5px solid ${C.t}30`,background:C.t+"06"}}>
         <div style={lbl}>Context Engine</div>
-        {["Source routing","Relevance ranking","Freshness weighting","Cross-source reasoning"].map((c,i)=>
+        {["Which sources to check","What's most relevant","What's most recent","Reasoning across sources"].map((c,i)=>
           <div key={i}style={nd(c,on("ctx",i),false)}>{c}</div>
         )}
       </div>
@@ -192,7 +179,7 @@ function VisionArch({e}){
 
     {arr(false)}
 
-    {/* Layer 5: Data Sources */}
+    {/* Layer 4: Data Sources */}
     <div style={{borderRadius:10,padding:"12px 14px",border:"1.5px solid #e2e8f0",background:"#f1f5f9"}}>
       <div style={lbl}>Data Sources</div>
       <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
@@ -215,77 +202,109 @@ function VisionArch({e}){
 
 
 /* ═══════════════════════════════════════
-   2D VALUE GRID
+   3x3 FRAMEWORK GRID
+   Rows: Inform, Recommend, Execute
+   Cols: On-demand exploratory, On-demand structured, Autonomous
    ═══════════════════════════════════════ */
 function ValueGrid({e}){
   const[sel,setSel]=useState(null);
-  const triggers=["On-demand","Autonomous"];
-  const triggerSubs=["User asks, agent answers","Agent watches, decides, acts"];
-  const triggerColors=[C.t,C.gr];
+
+  const triggers=[
+    {title:"On-demand, exploratory",sub:"Cowork. Generalized questions, unpredictable query shapes, code execution.",color:C.purple,icon:"🔍"},
+    {title:"On-demand, structured",sub:"Slack + n8n. Object-level tasks, predictable queries, already built.",color:C.t,icon:"💬"},
+    {title:"Autonomous",sub:"n8n 24/7. Fires on events or schedules, no human present.",color:C.gr,icon:"⚡"},
+  ];
+
   const values=["Inform","Recommend","Execute"];
   const valueSubs=["Surface the data","Tell me what to do","Do it for me"];
 
+  /* cells[row][col] */
   const cells=[
+    /* Inform */
     [
-      {agents:["Deal Brief","Ad-hoc Salesforce questions","Account Research","GTM Assistant"],status:"live",
-       desc:"Ask anything about an opp, account, or your pipeline. \"What's our EMEA pipeline by source?\" \"Compare our win rates against Braze.\" \"What pain points have travel prospects raised this quarter?\" Answers come from calls, emails, CRM, product data, and external research, all in one response."},
+      {agents:["Pipeline Analysis","Product Gap Analysis","Competitive Intel"],status:"planned",
+       desc:"\"What's our EMEA pipeline by source vs. last quarter?\" \"What product gaps are travel prospects raising?\" \"Where did we win against Braze?\" These span the full GTM stack. Query shapes are unpredictable, so we need Cowork's code execution and agentic harness. Not built yet."},
+      {agents:["Deal Brief","Account Research","Gem / Pearl","GTM Assistant"],status:"live",
+       desc:"Ask anything about a specific opp, account, or client. \"What happened on this deal since last week?\" \"What's the tech stack for this prospect?\" The query space is known and the answers are scoped to one object. Already built, already adopted."},
       {agents:["Account Research (auto)","Win/Loss Analysis"],status:"partial",
-       desc:"Account research runs automatically on new account creation. Win/loss analysis is scheduled weekly, pulling patterns from closed opps and surfacing them to leadership. Both run without anyone asking."},
+       desc:"Account research runs automatically on new account creation. Win/loss analysis (planned) runs weekly, pulling patterns from closed opps. Both produce structured reports without anyone asking."},
     ],
+    /* Recommend */
     [
-      {agents:["Gem","Pearl","GTM Strategy Queries"],status:"live",
-       desc:"\"What case studies should I lead with for this prospect?\" \"Is this opp ready to qualify?\" \"What's the best positioning for this industry?\" Gem and Pearl go beyond data. They interpret signals and recommend specific actions based on opp and account context."},
+      {agents:["Campaign Performance","ABM Targeting","Segment Analysis"],status:"planned",
+       desc:"\"Which ABM segments converted best to S2?\" \"What positioning works for this industry?\" Exploratory questions where the agent has to interpret data and recommend a direction. Cowork handles the open-ended reasoning."},
+      {agents:["Gem (recommendations)","Pearl (recommendations)"],status:"live",
+       desc:"\"What case studies should I lead with?\" \"Is this opp ready to qualify?\" Gem and Pearl interpret signals and recommend specific actions. The recommendations are always scoped to one opp or one account."},
       {agents:["Post-Demo Coach","Post-Discovery Coach","Qualification Agent","Risk Alerts"],status:"live",
-       desc:"After every demo and discovery call, coaching feedback is delivered automatically, scoring performance and surfacing blind spots. The qualification agent scores S1 opps continuously, pinging owners when a deal is ready to advance or has stalled. Risk alerts (coming with Rattle) will flag competitor mentions, budget concerns, and unengaged stakeholders."},
+       desc:"After every call, coaching feedback is delivered automatically. Qualification agent scores S1 opps continuously. Risk alerts (planned) flag competitor mentions and budget concerns. Low discovery scores have never converted to a won deal."},
     ],
+    /* Execute */
     [
-      {agents:["Forge (Demo Prep)","Landing Page Generator","Deck Generator (on-demand)"],status:"live",
-       desc:"Ask for a demo environment, landing page, or sales deck on Slack. Forge builds a full custom demo in under 5 minutes using the prospect's brand, industry, and product context. Landing pages tell a Bloomreach-as-the-solution story. Decks include situation recap, mutual plan, and matched case studies."},
-      {agents:["Deck Generator (auto)","SSR Agent","ABM Pages"],status:"partial",
-       desc:"Stage changes and SSRs trigger deck generation automatically. The SSR agent builds demo environments, generates briefs, and prepares decks for SCs without anyone asking. ABM pages (planned) will generate personalized landing pages for target accounts at scale."},
+      {agents:["Ad-hoc Reports","Custom Dashboards"],status:"planned",
+       desc:"\"Build me a pipeline report by region with charts.\" \"Show me a competitor breakdown for Q1.\" Cowork generates reports and visualizations on the fly using code execution. These are one-off deliverables, not recurring."},
+      {agents:["Sales Deck Generator","Landing Page Generator","Forge (Demo Prep)"],status:"live",
+       desc:"Ask for a demo, deck, or landing page on Slack. Forge builds a full custom demo in under 5 minutes. Decks include situation recap, mutual plan, matched case studies. All scoped to a specific prospect."},
+      {agents:["SSR Agent","Deck Generator (auto)","AI SDR","ABM Pages","Daily Briefings"],status:"partial",
+       desc:"SSR triggers demo + brief + deck simultaneously. AI SDR launches outreach sequences on new leads. ABM pages (planned) generate personalized landing pages at scale. All fire without anyone asking."},
     ],
   ];
 
   const statusBadge=(s)=>{
     const map={live:{bg:C.gr+"18",color:C.gr,label:"Live"},partial:{bg:C.am+"18",color:C.am,label:"Partially live"},planned:{bg:C.g+"15",color:C.g,label:"Planned"}};
     const st=map[s]||map.planned;
-    return<span style={{fontSize:9,fontWeight:700,padding:"2px 8px",borderRadius:10,background:st.bg,color:st.color,textTransform:"uppercase",letterSpacing:.5}}>{st.label}</span>
+    return<span style={{fontSize:8,fontWeight:700,padding:"2px 6px",borderRadius:8,background:st.bg,color:st.color,textTransform:"uppercase",letterSpacing:.4}}>{st.label}</span>
   };
 
   return<div>
-    <div style={{overflowX:"auto"}}><div style={{minWidth:560}}>
-      <div style={{display:"grid",gridTemplateColumns:"110px 1fr 1fr",gap:6,marginBottom:6}}>
-        <div style={{padding:"8px 0"}}><div style={{fontSize:9,fontWeight:700,color:C.g,letterSpacing:1.2,textTransform:"uppercase"}}>Value ↓ Trigger →</div></div>
-        {triggers.map((t,i)=><div key={i}style={{padding:"10px 14px",borderRadius:10,background:triggerColors[i]+"0a",borderBottom:`3px solid ${triggerColors[i]}`}}>
-          <div style={{fontSize:14,fontWeight:700,color:triggerColors[i]}}>{t}</div>
-          <div style={{fontSize:10,color:C.g,marginTop:1}}>{triggerSubs[i]}</div>
+    <div style={{overflowX:"auto"}}><div style={{minWidth:680}}>
+      {/* Column headers */}
+      <div style={{display:"grid",gridTemplateColumns:"90px 1fr 1fr 1fr",gap:6,marginBottom:6}}>
+        <div/>
+        {triggers.map((t,i)=><div key={i}style={{padding:"10px 12px",borderRadius:10,background:t.color+"08",borderBottom:`3px solid ${t.color}`}}>
+          <div style={{display:"flex",alignItems:"center",gap:5,marginBottom:2}}>
+            <span style={{fontSize:14}}>{t.icon}</span>
+            <span style={{fontSize:12,fontWeight:700,color:t.color}}>{t.title}</span>
+          </div>
+          <div style={{fontSize:9,color:C.g,lineHeight:1.4}}>{t.sub}</div>
         </div>)}
       </div>
-      {values.map((v,vi)=><div key={vi}style={{display:"grid",gridTemplateColumns:"110px 1fr 1fr",gap:6,marginBottom:6}}>
-        <div style={{display:"flex",flexDirection:"column",justifyContent:"center",padding:"8px 4px"}}>
-          <div style={{fontSize:14,fontWeight:700,color:C.b}}>{v}</div>
-          <div style={{fontSize:10,color:C.g}}>{valueSubs[vi]}</div>
+
+      {/* Rows */}
+      {values.map((v,vi)=><div key={vi}style={{display:"grid",gridTemplateColumns:"90px 1fr 1fr 1fr",gap:6,marginBottom:6}}>
+        <div style={{display:"flex",flexDirection:"column",justifyContent:"center",padding:"6px 2px"}}>
+          <div style={{fontSize:13,fontWeight:700,color:C.b}}>{v}</div>
+          <div style={{fontSize:9,color:C.g}}>{valueSubs[vi]}</div>
         </div>
         {cells[vi].map((cell,ti)=>{
           const isSelected=sel&&sel[0]===vi&&sel[1]===ti;
+          const col=triggers[ti];
           return<div key={ti}className="gcell"onClick={()=>setSel(isSelected?null:[vi,ti])}
-            style={{padding:"14px 16px",borderRadius:10,background:isSelected?triggerColors[ti]+"0c":"#fff",
-              border:`1.5px solid ${isSelected?triggerColors[ti]:cell.status==="live"?"#e2e8f0":"#f1f5f9"}`,cursor:"pointer"}}>
-            <div style={{display:"flex",gap:6,alignItems:"center",marginBottom:6,flexWrap:"wrap"}}>{statusBadge(cell.status)}</div>
-            <div style={{fontSize:11,fontWeight:600,color:C.b,lineHeight:1.5}}>{cell.agents.join(" · ")}</div>
-            {isSelected&&<div style={{marginTop:10,fontSize:11,color:C.b,lineHeight:1.65,paddingTop:10,borderTop:`1px solid ${triggerColors[ti]}20`}}>{cell.desc}</div>}
+            style={{padding:"12px 14px",borderRadius:10,cursor:"pointer",transition:"all .25s",
+              background:isSelected?col.color+"0c":"#fff",
+              border:`1.5px solid ${isSelected?col.color:cell.status==="live"?"#e2e8f0":"#f1f5f9"}`,
+            }}>
+            <div style={{display:"flex",gap:5,alignItems:"center",marginBottom:5,flexWrap:"wrap"}}>
+              {statusBadge(cell.status)}
+            </div>
+            <div style={{fontSize:10,fontWeight:600,color:C.b,lineHeight:1.5}}>
+              {cell.agents.join(" · ")}
+            </div>
+            {isSelected&&<div style={{marginTop:8,fontSize:10,color:C.b,lineHeight:1.6,paddingTop:8,borderTop:`1px solid ${col.color}20`}}>{cell.desc}</div>}
           </div>
         })}
       </div>)}
     </div></div>
+
+    {/* Legend */}
     <div style={{display:"flex",gap:16,marginTop:14,flexWrap:"wrap",justifyContent:"center"}}>
-      {[{s:"live",l:"Live"},{s:"partial",l:"Partially live"}].map(x=>
+      {[{s:"live",l:"Live"},{s:"partial",l:"Partially live"},{s:"planned",l:"Planned"}].map(x=>
         <div key={x.s}style={{display:"flex",alignItems:"center",gap:5}}>{statusBadge(x.s)}<span style={{fontSize:10,color:C.g}}>{x.l}</span></div>
       )}
     </div>
+
     <div style={{marginTop:16,padding:"12px 16px",borderRadius:10,background:C.b,color:"#fff"}}>
       <E tag="div"e={e}style={{fontSize:12,lineHeight:1.65}}>
-        <span style={{color:C.y,fontWeight:700}}>Why this matters:</span> Most GTM AI tools today sit in the top-left cell: someone asks a question, gets an answer. The further right and down you go, the more value compounds without adding headcount. Click any cell to see what's there.
+        <span style={{color:C.y,fontWeight:700}}>The shared layer underneath:</span> All three columns use the same skills, connectors, and context engine. The difference is how the user reaches them and whether a human has to be present. Click any cell to see what's there and why it lives where it does.
       </E>
     </div>
   </div>
@@ -317,6 +336,7 @@ function PlatformNote({e}){
             ["Serves whole team","❌ Per-user","✅","✅ Both"],
             ["Custom Slack routing","❌","✅","✅ n8n"],
             ["Plugin marketplace","✅ Strong","❌","✅ Cowork"],
+            ["Skills library","✅","❌","✅ Feeds both"],
             ["Code execution","✅ Built-in","❌","✅ Claude API"],
             ["Autonomous agents 24/7","❌","✅","✅ n8n"],
             ["Ad-hoc exploration","✅ Strong","❌","✅ Cowork"],
@@ -438,7 +458,7 @@ function App(){
 
     {/* ═══ 3. FRAMEWORK ═══ */}
     <Sec id="framework" bg="#fff">
-      <ST sub="Two dimensions define every agent we build: what value it delivers, and when." e={ed}>The Framework</ST>
+      <ST sub="Where each type of work runs, and why." e={ed}>The Framework</ST>
       <FI><ValueGrid e={ed}/></FI>
     </Sec>
 
@@ -469,7 +489,7 @@ function App(){
       <ST sub="Use platform capabilities where they're strong. Keep investing in what only we can build." e={ed}>How We Get There</ST>
       <FI><div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))",gap:12}}>
         {[
-          {icon:"🔌",title:"Cowork for self-service",desc:"Managers and marketers use Cowork to explore data, run analyses, and ask questions. We connect it to our brain MCP servers and approved skills. No custom build needed for ad-hoc work. This is already happening: pipeline dashboards and win/loss analyses have been built with Claude Code + Salesforce in hours.",color:C.purple},
+          {icon:"🔌",title:"Cowork for self-service",desc:"Managers and marketers use Cowork to explore data, run analyses, and ask questions. We connect it to our tools and approved skills. No custom build needed for ad-hoc work. This is already happening: pipeline dashboards and win/loss analyses have been built with Claude Code + Salesforce in hours.",color:C.purple},
           {icon:"⚡",title:"n8n for always-on automation",desc:"Coaching, qualification scoring, SSR triggers, daily briefings. Everything that has to run 24/7 without someone at their desk. Cowork is a desktop app and can't do this. n8n can, and already does.",color:C.am},
           {icon:"🧠",title:"Brains as shared MCP servers",desc:"Opp Brain, Customer Brain, Marketing Accounts Brain, all exposed as MCP endpoints. Any interface, whether Slack, Cowork, or an API, connects to the same intelligence. We build once, it works through every channel.",color:C.t},
           {icon:"📚",title:"Skills in GitHub",desc:"One repo with three levels: global, team, personal. A skill-creator agent handles creation through Slack/Cowork so nobody touches GitHub directly. Version-controlled. Anyone can contribute.",color:C.gr},
