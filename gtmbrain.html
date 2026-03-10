@@ -409,9 +409,6 @@ function App(){
           {title:"No conversation memory",
            desc:"Agents don't remember previous messages in a Slack thread. If you ask a follow-up question, the agent starts from scratch. This breaks natural conversation flow and forces users to repeat context.",
            severity:"medium"},
-          {title:"Teams with 20 people shipped tools nobody uses",
-           desc:"Product Marketing and Enablement teams built their own AI tools with near-zero adoption. Gem, built by one person with zero enablement, gets 10x daily usage. The difference is distribution: meet people in the UI they already use (Slack), not in a new SaaS dashboard.",
-           severity:"medium"},
         ].map((item,i)=><div key={i}style={{
           display:"flex",gap:14,padding:"16px",borderRadius:12,background:"#fff",
           border:`1px solid ${item.severity==="high"?C.rd+"25":"#e5e7eb"}`,
