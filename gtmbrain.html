@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GTM Brain — Vision 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--t:#00b2db;--y:#ffe665;--b:#0a0a0f;--g:#6b7280;--gr:#059669;--am:#d97706;--rd:#dc2626;--bg:#f7f8fa;--purple:#8b5cf6}
+body{font-family:'Poppins',system-ui,sans-serif;color:var(--b);background:var(--bg);-webkit-font-smoothing:antialiased}
+::selection{background:var(--t);color:#fff}
+[contenteditable="true"]{outline:1px dashed rgba(0,178,219,.3);outline-offset:2px;border-radius:4px;cursor:text}
+[contenteditable="true"]:focus{outline:2px solid var(--t);background:rgba(0,178,219,.04)}
+.ebtn{position:fixed;bottom:20px;right:20px;z-index:999;display:flex;align-items:center;gap:8px;background:var(--b);color:#fff;padding:8px 18px;border-radius:24px;font-size:12px;font-weight:600;cursor:pointer;box-shadow:0 4px 24px rgba(0,0,0,.3);transition:all .2s;font-family:'Poppins',sans-serif;border:none}
+.ebtn:hover{transform:translateY(-1px)}.ebtn.on{background:var(--t)}.ebtn.hide{display:none}
+.pill{padding:6px 14px;border-radius:20px;font-size:11px;font-weight:500;white-space:nowrap;transition:all .2s;cursor:pointer;border:none;font-family:'Poppins',sans-serif;background:transparent;color:var(--g)}
+.pill.on{background:var(--b);color:#fff}.pill:not(.on):hover{background:#f1f5f9}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#d1d5db;border-radius:10px}
+.gcell{transition:all .25s;cursor:default}.gcell:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.08)}
+.coll-btn{display:flex;align-items:center;gap:10px;width:100%;padding:12px 16px;background:var(--b);color:#fff;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;border-radius:10px;transition:all .2s}
+.coll-btn:hover{background:#1a1a2e}
+.fbtn{padding:6px 14px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;transition:all .2s;border-width:1.5px;border-style:solid}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const{useState,useEffect,useRef}=React;
+const C={t:"#00b2db",y:"#ffe665",b:"#0a0a0f",g:"#6b7280",gr:"#059669",am:"#d97706",rd:"#dc2626",bg:"#f7f8fa",purple:"#8b5cf6"};
+
+function E({tag:Tag="span",children,e,...p}){return<Tag{...p}contentEditable={e||undefined}suppressContentEditableWarning>{children}</Tag>}
+function FI({children,delay=0}){const[v,s]=useState(false);const r=useRef(null);useEffect(()=>{const o=new IntersectionObserver(([x])=>{if(x.isIntersecting)s(true)},{threshold:.08});if(r.current)o.observe(r.current);return()=>o.disconnect()},[]);return<div ref={r}style={{opacity:v?1:0,transform:v?"translateY(0)":"translateY(20px)",transition:`opacity .6s ease ${delay}ms, transform .6s ease ${delay}ms`}}>{children}</div>}
+function Sec({id,children,bg="#fff"}){return<section id={id}style={{background:bg,padding:"64px 24px"}}><div style={{maxWidth:860,margin:"0 auto"}}>{children}</div></section>}
+function ST({children,sub,e,accent=C.t}){return<div style={{marginBottom:28}}><E tag="h2"e={e}style={{fontSize:26,fontWeight:800,margin:0,lineHeight:1.2,letterSpacing:"-0.02em"}}>{children}</E>{sub&&<E tag="p"e={e}style={{fontSize:14,color:C.g,marginTop:8,lineHeight:1.6,maxWidth:600}}>{sub}</E>}<div style={{width:48,height:3,background:accent,borderRadius:2,marginTop:12}}/></div>}
+
+
+/* ═══════════════════════════════════════════════════════
+   VISION = Interactive Architecture Flow Trace
+   This is THE centerpiece. Click a flow, watch it light up.
+   ═══════════════════════════════════════════════════════ */
+function VisionArch({e}){
+  const[flow,setFlow]=useState(null);
+
+  /* Skills indices: 0=Deal Brief, 1=Case Study, 2=AI SDR, 3=Coaching, 4=ABM/Outreach, 5=Analysis, 6=Win/Loss, 7=Deck Generation, 8=Page Generation */
+  /* Connectors indices: 0=Salesforce, 1=Clari, 2=Enrichment, 3=Salesloft, 4=Product data, 5=Engagement data */
+
+  const flows={
+    deck:{label:"Sales Deck",color:C.t,bypass:false,
+      desc:"AE asks Gem on Slack. Router sends it to the Opp path. Opp Brain pulls from Salesforce, calls, emails, and case studies. Deal Brief, Case Study, and Deck Generation skills structure the output: situation recap, mutual plan, and matched case studies. Deck delivered in Slack.",
+      sur:[0],paths:[0],brains:[0],skills:[0,1,7],conn:[0],ctx:[0,1],data:[0,1,2,5]},
+    coach:{label:"Coach",color:C.am,bypass:false,
+      desc:"Call ends. Webhook fires. Opp Brain pulls the transcript. Coaching skill scores performance against criteria. Specific feedback in Slack within hours. 4% MoM improvement trend.",
+      sur:[1],paths:[0],brains:[0],skills:[3],conn:[1],ctx:[1],data:[1,5]},
+    sdr:{label:"AI SDR",color:C.gr,bypass:false,
+      desc:"Autonomous trigger fires on new inbound leads or scheduled cadence. Router sends it to the Marketing Accounts path. Marketing Accounts Brain pulls prospect context from Salesforce and enrichment data. AI SDR skill generates outreach through Salesloft. Sequences launched across regions.",
+      sur:[1],paths:[2],brains:[2],skills:[2,4],conn:[0,2,3],ctx:[0],data:[0,3,6]},
+    pipeline:{label:"Pipeline Analysis",color:C.purple,bypass:true,
+      desc:"Marketer opens Cowork and asks: \"What's our EMEA pipeline by source vs. last quarter?\" Cowork connects directly to Salesforce and engagement data through its own connectors. Analysis skill structures the response. No routing or MCP layer needed, this is a generalized question across the full GTM stack.",
+      sur:[2],paths:[],brains:[],skills:[5],conn:[0,5],ctx:[0,2],data:[0,6]},
+    winloss:{label:"Win/Loss",color:C.rd,bypass:true,
+      desc:"Marketer opens Cowork and asks for a win/loss breakdown. Cowork pulls all closed opps, retrieves call transcripts and emails for context, and generates patterns, competitor breakdown, and product gap themes. Uses Analysis and Win/Loss skills. Not built yet, but easier to build directly in Cowork since it's a generalized query.",
+      sur:[2],paths:[],brains:[],skills:[5,6],conn:[0,1],ctx:[0,1,2,3],data:[0,1,2,5,6]},
+    adhoc:{label:"Ad-hoc",color:"#64748b",bypass:true,
+      desc:"Someone opens Cowork on their laptop and asks any GTM question: \"What are our top pipeline risks?\" \"Which product gaps did travel prospects raise?\" \"Show me win rates by region.\" Cowork connects directly to data sources through its own connectors, using our shared skills and context engine. It skips domain routing and MCP servers entirely.",
+      sur:[2],paths:[],brains:[],skills:[0,1,3,5,6,7,8],conn:[0,1,2,3,4,5],ctx:[0,1,2,3],data:[0,1,2,3,4,5,6]},
+  };
+
+  const isBypass=flow&&flows[flow]?.bypass;
+  const on=(cat,i)=>flow&&flows[flow]?.[cat]?.includes(i);
+  const fc=()=>flow?flows[flow]?.color||C.t:C.t;
+
+  const nd=(text,lit,dimmed)=>({
+    display:"inline-block",fontSize:10,fontWeight:lit?700:500,
+    padding:"4px 10px",borderRadius:6,margin:2,transition:"all .25s",
+    background:lit?fc()+"18":"#fff",
+    border:`1.5px solid ${lit?fc():"#e5e7eb"}`,
+    color:lit?fc():C.g,
+    opacity:dimmed?.15:1,
+  });
+
+  const lbl={fontSize:9,fontWeight:700,letterSpacing:1.5,color:C.g,textTransform:"uppercase",marginBottom:7};
+
+  const arr=(dimmed)=>{
+    const active=!!flow&&!dimmed;
+    const color=active?fc():dimmed?"#e5e7eb":"#d1d5db";
+    return<div style={{display:"flex",justifyContent:"center",padding:"3px 0",opacity:dimmed?.15:1,transition:"opacity .25s"}}>
+      <svg width="20"height="18"viewBox="0 0 20 18">
+        <line x1="10"y1="0"x2="10"y2="12"stroke={color}strokeWidth={active?2.5:1.5}strokeDasharray={active?"none":"4 3"}/>
+        <polygon points="5,11 10,18 15,11"fill={color}/>
+      </svg>
+    </div>
+  };
+
+  const arrTriple=()=>{
+    const cats=["skills","conn","ctx"];
+    return<div style={{display:"flex",justifyContent:"center",padding:"3px 0"}}>
+      <svg width="160"height="22"viewBox="0 0 160 22">
+        {[40,80,120].map((x,i)=>{
+          const a=flow&&flows[flow]?.[cats[i]]?.length>0;
+          const c=a?fc():"#d1d5db";
+          return<g key={i}>
+            <line x1={x}y1="0"x2={x}y2="15"stroke={c}strokeWidth={a?2.5:1.5}strokeDasharray={a?"none":"4 3"}/>
+            <polygon points={`${x-4},13 ${x},21 ${x+4},13`}fill={c}/>
+          </g>
+        })}
+        <text x="40"y="9"textAnchor="middle"fontSize="7"fill="#9ca3af"fontFamily="Poppins">uses</text>
+        <text x="80"y="9"textAnchor="middle"fontSize="7"fill="#9ca3af"fontFamily="Poppins">calls</text>
+        <text x="120"y="9"textAnchor="middle"fontSize="7"fill="#9ca3af"fontFamily="Poppins">routes</text>
+      </svg>
+    </div>
+  };
+
+  return<div>
+    {/* Flow buttons */}
+    <div style={{display:"flex",gap:6,marginBottom:16,flexWrap:"wrap",alignItems:"center"}}>
+      <span style={{fontSize:11,color:C.g}}>Trace a flow:</span>
+      {Object.entries(flows).map(([k,f])=><button key={k}onClick={()=>setFlow(flow===k?null:k)}
+        className="fbtn"style={{borderColor:flow===k?f.color:"#e5e7eb",background:flow===k?f.color+"12":"#fff",color:flow===k?f.color:C.g}}>{f.label}</button>)}
+    </div>
+
+    {/* Layer 1: User Surfaces */}
+    <div style={{borderRadius:10,padding:"12px 14px",border:`1.5px solid ${C.t}30`,background:C.t+"08",marginBottom:2}}>
+      <div style={lbl}>User Surfaces</div>
+      <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+        {["Slack (/gem, /pearl, @gtm-assistant)","Autonomous (coaches, scoring, analysis)","Cowork (self-service)"].map((s,i)=>
+          <span key={i}style={nd(s,on("sur",i),false)}>{s}</span>
+        )}
+      </div>
+    </div>
+
+    {/* When bypass flow: show skip indicator, dim routing+MCP only */}
+    {isBypass&&<div style={{display:"flex",alignItems:"center",gap:8,padding:"6px 0",justifyContent:"center"}}>
+      <svg width="240"height="24"viewBox="0 0 240 24">
+        <line x1="20"y1="12"x2="212"y2="12"stroke={fc()}strokeWidth="2"strokeDasharray="6 4"/>
+        <polygon points="212,6 224,12 212,18"fill={fc()}/>
+        <text x="120"y="8"textAnchor="middle"fontSize="8"fill={fc()}fontFamily="Poppins"fontWeight="600">skips routing + MCP servers</text>
+      </svg>
+    </div>}
+
+    {!isBypass&&arr(false)}
+
+    {/* Layer 2: Domain Routing — dimmed on bypass */}
+    <div style={{borderRadius:10,padding:"12px 14px",border:"1.5px solid #e5e7eb",background:"#fafafa",marginBottom:2,opacity:isBypass?.2:1,transition:"opacity .25s"}}>
+      <div style={lbl}>Domain Routing</div>
+      <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+        {["Opp path","Customer path","Marketing Accounts path"].map((p,i)=>
+          <span key={i}style={nd(p,on("paths",i),isBypass)}>{p}</span>
+        )}
+      </div>
+    </div>
+
+    {!isBypass&&arr(false)}
+    {isBypass&&<div style={{height:6}}/>}
+
+    {/* Layer 3: MCP Servers — dimmed on bypass */}
+    <div style={{borderRadius:10,padding:"12px 14px",border:`1.5px solid ${C.gr}30`,background:C.gr+"06",marginBottom:2,opacity:isBypass?.2:1,transition:"opacity .25s"}}>
+      <div style={lbl}>MCP Servers</div>
+      <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+        {["Opp Brain","Customer Brain","Marketing Accounts Brain"].map((b,i)=>
+          <span key={i}style={nd(b,on("brains",i),isBypass)}>{b}</span>
+        )}
+      </div>
+    </div>
+
+    {!isBypass&&arrTriple()}
+    {isBypass&&arr(false)}
+
+    {/* Layer 4: Skills + Connectors + Context Engine — NOT dimmed on bypass */}
+    <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:2}}>
+      <div style={{flex:"1 1 160px",borderRadius:10,padding:"10px 12px",border:`1.5px solid ${C.y}50`,background:C.y+"12"}}>
+        <div style={lbl}>Skills (GitHub)</div>
+        {["Deal Brief","Case Study","AI SDR","Coaching","ABM / Outreach","Analysis","Win/Loss","Deck Generation","Page Generation"].map((s,i)=>
+          <div key={i}style={nd(s,on("skills",i),false)}>{s}</div>
+        )}
+      </div>
+      <div style={{flex:"1 1 160px",borderRadius:10,padding:"10px 12px",border:`1.5px solid ${C.gr}30`,background:C.gr+"04"}}>
+        <div style={lbl}>Connectors (MCP)</div>
+        {["Salesforce","Clari","Enrichment","Salesloft","Product data","Engagement data"].map((t,i)=>
+          <div key={i}style={nd(t,on("conn",i),false)}>{t}</div>
+        )}
+      </div>
+      <div style={{flex:"1 1 160px",borderRadius:10,padding:"10px 12px",border:`1.5px solid ${C.t}30`,background:C.t+"06"}}>
+        <div style={lbl}>Context Engine</div>
+        {["Source routing","Relevance ranking","Freshness weighting","Cross-source reasoning"].map((c,i)=>
+          <div key={i}style={nd(c,on("ctx",i),false)}>{c}</div>
+        )}
+      </div>
+    </div>
+
+    {arr(false)}
+
+    {/* Layer 5: Data Sources */}
+    <div style={{borderRadius:10,padding:"12px 14px",border:"1.5px solid #e2e8f0",background:"#f1f5f9"}}>
+      <div style={lbl}>Data Sources</div>
+      <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
+        {["Salesforce","Calls","Emails","Research","Product usage","Case studies","Competitive / engagement"].map((d,i)=>
+          <span key={i}style={nd(d,on("data",i),false)}>{d}</span>
+        )}
+      </div>
+    </div>
+
+    {/* Flow description */}
+    {flow&&<div style={{marginTop:12,padding:"12px 16px",borderRadius:10,background:fc()+"08",border:`1.5px solid ${fc()}20`,fontSize:12,color:C.b,lineHeight:1.65}}>
+      {flows[flow]?.desc}
+    </div>}
+
+    {!flow&&<div style={{marginTop:12,textAlign:"center",fontSize:12,color:C.g,padding:"8px 0"}}>
+      Click a flow above to trace how it moves through the system.
+    </div>}
+  </div>
+}
+
+
+/* ═══════════════════════════════════════
+   2D VALUE GRID
+   ═══════════════════════════════════════ */
+function ValueGrid({e}){
+  const[sel,setSel]=useState(null);
+  const triggers=["On-demand","Autonomous"];
+  const triggerSubs=["User asks, agent answers","Agent watches, decides, acts"];
+  const triggerColors=[C.t,C.gr];
+  const values=["Inform","Recommend","Execute"];
+  const valueSubs=["Surface the data","Tell me what to do","Do it for me"];
+
+  const cells=[
+    [
+      {agents:["Deal Brief","Ad-hoc Salesforce questions","Account Research","GTM Assistant"],status:"live",
+       desc:"Ask anything about an opp, account, or your pipeline. \"What's our EMEA pipeline by source?\" \"Compare our win rates against Braze.\" \"What pain points have travel prospects raised this quarter?\" Answers come from calls, emails, CRM, product data, and external research, all in one response."},
+      {agents:["Account Research (auto)","Win/Loss Analysis"],status:"partial",
+       desc:"Account research runs automatically on new account creation. Win/loss analysis is scheduled weekly, pulling patterns from closed opps and surfacing them to leadership. Both run without anyone asking."},
+    ],
+    [
+      {agents:["Gem","Pearl","GTM Strategy Queries"],status:"live",
+       desc:"\"What case studies should I lead with for this prospect?\" \"Is this opp ready to qualify?\" \"What's the best positioning for this industry?\" Gem and Pearl go beyond data. They interpret signals and recommend specific actions based on opp and account context."},
+      {agents:["Post-Demo Coach","Post-Discovery Coach","Qualification Agent","Risk Alerts"],status:"live",
+       desc:"After every demo and discovery call, coaching feedback is delivered automatically, scoring performance and surfacing blind spots. The qualification agent scores S1 opps continuously, pinging owners when a deal is ready to advance or has stalled. Risk alerts (coming with Rattle) will flag competitor mentions, budget concerns, and unengaged stakeholders."},
+    ],
+    [
+      {agents:["Forge (Demo Prep)","Landing Page Generator","Deck Generator (on-demand)"],status:"live",
+       desc:"Ask for a demo environment, landing page, or sales deck on Slack. Forge builds a full custom demo in under 5 minutes using the prospect's brand, industry, and product context. Landing pages tell a Bloomreach-as-the-solution story. Decks include situation recap, mutual plan, and matched case studies."},
+      {agents:["Deck Generator (auto)","SSR Agent","ABM Pages"],status:"partial",
+       desc:"Stage changes and SSRs trigger deck generation automatically. The SSR agent builds demo environments, generates briefs, and prepares decks for SCs without anyone asking. ABM pages (planned) will generate personalized landing pages for target accounts at scale."},
+    ],
+  ];
+
+  const statusBadge=(s)=>{
+    const map={live:{bg:C.gr+"18",color:C.gr,label:"Live"},partial:{bg:C.am+"18",color:C.am,label:"Partially live"},planned:{bg:C.g+"15",color:C.g,label:"Planned"}};
+    const st=map[s]||map.planned;
+    return<span style={{fontSize:9,fontWeight:700,padding:"2px 8px",borderRadius:10,background:st.bg,color:st.color,textTransform:"uppercase",letterSpacing:.5}}>{st.label}</span>
+  };
+
+  return<div>
+    <div style={{overflowX:"auto"}}><div style={{minWidth:560}}>
+      <div style={{display:"grid",gridTemplateColumns:"110px 1fr 1fr",gap:6,marginBottom:6}}>
+        <div style={{padding:"8px 0"}}><div style={{fontSize:9,fontWeight:700,color:C.g,letterSpacing:1.2,textTransform:"uppercase"}}>Value ↓ Trigger →</div></div>
+        {triggers.map((t,i)=><div key={i}style={{padding:"10px 14px",borderRadius:10,background:triggerColors[i]+"0a",borderBottom:`3px solid ${triggerColors[i]}`}}>
+          <div style={{fontSize:14,fontWeight:700,color:triggerColors[i]}}>{t}</div>
+          <div style={{fontSize:10,color:C.g,marginTop:1}}>{triggerSubs[i]}</div>
+        </div>)}
+      </div>
+      {values.map((v,vi)=><div key={vi}style={{display:"grid",gridTemplateColumns:"110px 1fr 1fr",gap:6,marginBottom:6}}>
+        <div style={{display:"flex",flexDirection:"column",justifyContent:"center",padding:"8px 4px"}}>
+          <div style={{fontSize:14,fontWeight:700,color:C.b}}>{v}</div>
+          <div style={{fontSize:10,color:C.g}}>{valueSubs[vi]}</div>
+        </div>
+        {cells[vi].map((cell,ti)=>{
+          const isSelected=sel&&sel[0]===vi&&sel[1]===ti;
+          return<div key={ti}className="gcell"onClick={()=>setSel(isSelected?null:[vi,ti])}
+            style={{padding:"14px 16px",borderRadius:10,background:isSelected?triggerColors[ti]+"0c":"#fff",
+              border:`1.5px solid ${isSelected?triggerColors[ti]:cell.status==="live"?"#e2e8f0":"#f1f5f9"}`,cursor:"pointer"}}>
+            <div style={{display:"flex",gap:6,alignItems:"center",marginBottom:6,flexWrap:"wrap"}}>{statusBadge(cell.status)}</div>
+            <div style={{fontSize:11,fontWeight:600,color:C.b,lineHeight:1.5}}>{cell.agents.join(" · ")}</div>
+            {isSelected&&<div style={{marginTop:10,fontSize:11,color:C.b,lineHeight:1.65,paddingTop:10,borderTop:`1px solid ${triggerColors[ti]}20`}}>{cell.desc}</div>}
+          </div>
+        })}
+      </div>)}
+    </div></div>
+    <div style={{display:"flex",gap:16,marginTop:14,flexWrap:"wrap",justifyContent:"center"}}>
+      {[{s:"live",l:"Live"},{s:"partial",l:"Partially live"}].map(x=>
+        <div key={x.s}style={{display:"flex",alignItems:"center",gap:5}}>{statusBadge(x.s)}<span style={{fontSize:10,color:C.g}}>{x.l}</span></div>
+      )}
+    </div>
+    <div style={{marginTop:16,padding:"12px 16px",borderRadius:10,background:C.b,color:"#fff"}}>
+      <E tag="div"e={e}style={{fontSize:12,lineHeight:1.65}}>
+        <span style={{color:C.y,fontWeight:700}}>Why this matters:</span> Most GTM AI tools today sit in the top-left cell: someone asks a question, gets an answer. The further right and down you go, the more value compounds without adding headcount. Click any cell to see what's there.
+      </E>
+    </div>
+  </div>
+}
+
+
+/* ═══════════════════════════════════════
+   PLATFORM COMPARISON (collapsed)
+   ═══════════════════════════════════════ */
+function PlatformNote({e}){
+  const[open,setOpen]=useState(false);
+  return<div style={{marginTop:10}}>
+    <button onClick={()=>setOpen(!open)}className="coll-btn"style={{background:"#1e293b"}}>
+      <span style={{transition:".2s",transform:open?"rotate(90deg)":"rotate(0)",fontSize:10}}>▶</span>
+      Platform comparison: Cowork vs. n8n vs. target
+      <span style={{fontSize:10,fontWeight:400,opacity:.6,marginLeft:"auto"}}>{open?"collapse":"expand"}</span>
+    </button>
+    {open&&<div style={{marginTop:8,padding:"16px 18px",borderRadius:12,border:"1px solid #e5e7eb",background:"#fff"}}>
+      <table style={{width:"100%",borderCollapse:"collapse",fontSize:11}}>
+        <thead><tr>
+          <th style={{textAlign:"left",padding:"6px 8px",borderBottom:"2px solid #e5e7eb",fontSize:10,color:C.g,width:"35%"}}></th>
+          <th style={{textAlign:"left",padding:"6px 8px",borderBottom:`2px solid ${C.purple}`,fontSize:10,color:C.purple,fontWeight:700}}>Cowork</th>
+          <th style={{textAlign:"left",padding:"6px 8px",borderBottom:"2px solid #e5e7eb",fontSize:10,color:C.g,fontWeight:700}}>n8n (current)</th>
+          <th style={{textAlign:"left",padding:"6px 8px",borderBottom:`2px solid ${C.t}`,fontSize:10,color:C.t,fontWeight:700}}>Target</th>
+        </tr></thead>
+        <tbody>
+          {[
+            ["Always-on server","❌ Desktop only","✅","✅ n8n"],
+            ["Serves whole team","❌ Per-user","✅","✅ Both"],
+            ["Custom Slack routing","❌","✅","✅ n8n"],
+            ["Plugin marketplace","✅ Strong","❌","✅ Cowork"],
+            ["Code execution","✅ Built-in","❌","✅ Claude API"],
+            ["Autonomous agents 24/7","❌","✅","✅ n8n"],
+            ["Ad-hoc exploration","✅ Strong","❌","✅ Cowork"],
+            ["MCP connectors","✅ Growing","✅ Custom","✅ Shared"],
+          ].map((row,i)=><tr key={i}style={{background:i%2===0?"#fff":"#fafbfc"}}>
+            {row.map((cell,j)=><td key={j}style={{padding:"5px 8px",borderBottom:"1px solid #f1f5f9",fontWeight:j===0?600:400,color:cell.startsWith?.("✅")?C.gr:cell.startsWith?.("❌")?C.rd:cell.startsWith?.("⚠")?C.am:C.b}}>{cell}</td>)}
+          </tr>)}
+        </tbody>
+      </table>
+      <div style={{marginTop:12,padding:"10px 14px",borderRadius:8,background:C.t+"06",border:`1px solid ${C.t}18`,fontSize:11,lineHeight:1.6}}>
+        Cowork is great at self-service exploration. n8n is great at always-on automation. We'll use both, connected through shared brain MCP servers and a single skills repo.
+      </div>
+    </div>}
+  </div>
+}
+
+
+/* ══════════════════════════
+   MAIN APP
+   ══════════════════════════ */
+function App(){
+  const[ed,setEd]=useState(false);
+  const[pres,setPres]=useState(false);
+  const[nav,setNav]=useState("vision");
+
+  const sections=[
+    {id:"vision",l:"Vision"},
+    {id:"problem",l:"Problem"},
+    {id:"framework",l:"Framework"},
+    {id:"proof",l:"Proof"},
+    {id:"direction",l:"Direction"},
+    {id:"platforms",l:"Platforms"},
+    {id:"evolution",l:"Evolution"},
+    {id:"team",l:"Team"},
+    {id:"risk",l:"Risks"},
+  ];
+
+  useEffect(()=>{const h=ev=>{if(ev.ctrlKey&&ev.shiftKey&&ev.key==="P"){ev.preventDefault();setPres(p=>!p)}};window.addEventListener("keydown",h);return()=>window.removeEventListener("keydown",h)},[]);
+  useEffect(()=>{const h=()=>{for(const s of[...sections].reverse()){const el=document.getElementById(s.id);if(el&&el.getBoundingClientRect().top<=120){setNav(s.id);break}}};window.addEventListener("scroll",h,{passive:true});return()=>window.removeEventListener("scroll",h)},[]);
+
+  return<div>
+    <button className={`ebtn ${ed?"on":""} ${pres?"hide":""}`}onClick={()=>setEd(!ed)}>
+      <span style={{fontSize:14}}>{ed?"✏️":"👁"}</span>{ed?"Editing":"View"}
+    </button>
+
+    {/* ═══ HERO ═══ */}
+    <div style={{background:C.b,padding:"72px 24px 56px",textAlign:"center",position:"relative",overflow:"hidden"}}>
+      <div style={{position:"absolute",inset:0,backgroundImage:"radial-gradient(circle at 1px 1px, rgba(255,255,255,.03) 1px, transparent 0)",backgroundSize:"32px 32px"}}/>
+      <div style={{position:"relative",zIndex:1}}>
+        <div style={{fontSize:10,fontWeight:700,letterSpacing:3,color:C.t,marginBottom:12,textTransform:"uppercase"}}>Bloomreach GTM AI Architecture</div>
+        <h1 style={{fontSize:42,fontWeight:900,color:"#fff",margin:"0 0 8px",lineHeight:1.1,letterSpacing:"-0.03em"}}>
+          GTM <span style={{color:C.y}}>Brain</span>
+        </h1>
+        <E tag="p"e={ed}style={{fontSize:16,color:"#9ca3af",margin:"0 auto",fontWeight:400,maxWidth:520,lineHeight:1.6}}>
+          One intelligence layer for every GTM function at Bloomreach.
+        </E>
+        <p style={{fontSize:11,color:"#4b5563",marginTop:28}}>Alper Gondiken · March 2026</p>
+      </div>
+    </div>
+
+    {/* ═══ NAV ═══ */}
+    <nav style={{position:"sticky",top:0,zIndex:100,background:"rgba(255,255,255,.92)",backdropFilter:"blur(12px)",borderBottom:"1px solid #e5e7eb",display:"flex",justifyContent:"center",gap:2,padding:"6px 8px",overflowX:"auto"}}>
+      {sections.map(s=><button key={s.id}className={`pill ${nav===s.id?"on":""}`}onClick={()=>document.getElementById(s.id)?.scrollIntoView({behavior:"smooth"})}>{s.l}</button>)}
+    </nav>
+
+    {/* ═══ 1. VISION = Interactive Architecture Trace ═══ */}
+    <Sec id="vision" bg="#fff">
+      <ST sub="Click a flow to trace how it moves through the system." e={ed}>The Vision</ST>
+      <FI><VisionArch e={ed}/></FI>
+    </Sec>
+
+    {/* ═══ 2. PROBLEM = Specific architecture problems ═══ */}
+    <Sec id="problem" bg={C.bg}>
+      <ST e={ed}>Problems With Current Architecture</ST>
+      <FI><div style={{display:"flex",flexDirection:"column",gap:10}}>
+        {[
+          {title:"Every new capability is a full n8n workflow",
+           desc:"Adding a new agent or action means building, testing, and maintaining an entire workflow from scratch. Each sub-action (deck gen, research, briefing) is its own workflow. This is the main bottleneck for shipping new capabilities.",
+           severity:"high"},
+          {title:"Generalized queries break with hand-built SOQL",
+           desc:"The generalized GTM agent (\"ask anything about Salesforce\") doesn't handle edge cases well when we hand-code SOQL queries for every possible question shape. Cowork does this better because it has code execution and can write and iterate queries on the fly. We need that same capability in our pipeline.",
+           severity:"high"},
+          {title:"Marketing has zero agents today",
+           desc:"All agents built so far serve Revenue: demo prep, coaching, deal briefs, qualification. Marketing, which is behind on pipeline in most regions, has no dedicated agents for pipeline analysis, ABM targeting, win/loss, competitive intel, or product gap analysis. The architecture needs to extend to a Marketing Accounts Brain.",
+           severity:"high"},
+          {title:"One person builds and maintains everything",
+           desc:"15+ agents, all ingestion pipelines, all context engineering, all vendor evaluation, all measurement. Single point of failure. Any new request competes with maintenance of existing agents.",
+           severity:"high"},
+          {title:"No conversation memory",
+           desc:"Agents don't remember previous messages in a Slack thread. If you ask a follow-up question, the agent starts from scratch. This breaks natural conversation flow and forces users to repeat context.",
+           severity:"medium"},
+          {title:"Teams with 20 people shipped tools nobody uses",
+           desc:"Product Marketing and Enablement teams built their own AI tools with near-zero adoption. Gem, built by one person with zero enablement, gets 10x daily usage. The difference is distribution: meet people in the UI they already use (Slack), not in a new SaaS dashboard.",
+           severity:"medium"},
+        ].map((item,i)=><div key={i}style={{
+          display:"flex",gap:14,padding:"16px",borderRadius:12,background:"#fff",
+          border:`1px solid ${item.severity==="high"?C.rd+"25":"#e5e7eb"}`,
+        }}>
+          <div style={{
+            width:8,minWidth:8,borderRadius:4,flexShrink:0,
+            background:item.severity==="high"?C.rd:C.am,
+          }}/>
+          <div>
+            <div style={{fontSize:13,fontWeight:700,color:C.b,marginBottom:4}}>{item.title}</div>
+            <E tag="div"e={ed}style={{fontSize:11,color:C.g,lineHeight:1.6}}>{item.desc}</E>
+          </div>
+        </div>)}
+      </div></FI>
+    </Sec>
+
+    {/* ═══ 3. FRAMEWORK ═══ */}
+    <Sec id="framework" bg="#fff">
+      <ST sub="Two dimensions define every agent we build: what value it delivers, and when." e={ed}>The Framework</ST>
+      <FI><ValueGrid e={ed}/></FI>
+    </Sec>
+
+    {/* ═══ 4. PROOF ═══ */}
+    <Sec id="proof" bg={C.bg}>
+      <ST e={ed} accent={C.gr}>What's Already Working</ST>
+      <FI><E tag="p"e={ed}style={{fontSize:13,color:C.g,lineHeight:1.7,marginBottom:18}}>
+        Most of this is live and measurable today, built by a one-person team in 6 months.
+      </E></FI>
+      <FI delay={80}><div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(230px,1fr))",gap:10}}>
+        {[
+          {title:"Forge (Demo Prep)",kpi:"160% win rate uplift, 35% faster S2 to S4",detail:"About 50 custom demos per month. Runs autonomously on SSR creation. ARR-weighted velocity up 162%. Saves 300+ hours per quarter.",color:C.gr},
+          {title:"Post-Demo Coach",kpi:"4% month-on-month improvement",detail:"Every demo scored. Feedback delivered automatically. Consistent improvement trend since launch.",color:C.am},
+          {title:"Post-Discovery Coach",kpi:"Predictive signal on deal outcomes",detail:"We have never won an opp where the discovery score at S0/S1 was low. It took months of data to find this. No vendor has it.",color:C.am},
+          {title:"Gem (Slack agent)",kpi:"10x daily usage vs. CharacterQuilt",detail:"Averaging 10 uses per day across AEs and SCs with zero enablement. The prior tool had near-zero adoption even with a full team behind it.",color:C.t},
+          {title:"Qualification Agent",kpi:"Scores opps, suggests next action",detail:"Live with Rattle. Pulls from Salesforce, calls, and emails. Above 80: one-click qualify. Below 40 and stalled: one-click disqualify.",color:C.purple},
+          {title:"Deck and Landing Page Generators",kpi:"About 200h savings per quarter",detail:"Sales decks with situation recap, mutual plan, and relevant case studies. Landing pages with prospect-specific narrative.",color:C.t},
+        ].map((item,i)=><div key={i}className="gcell"style={{padding:"16px",borderRadius:12,border:`1px solid ${item.color}20`,background:"#fff"}}>
+          <div style={{fontSize:13,fontWeight:700,color:C.b,marginBottom:6}}>{item.title}</div>
+          <div style={{fontSize:12,fontWeight:600,color:item.color,lineHeight:1.5,marginBottom:6}}>{item.kpi}</div>
+          <E tag="div"e={ed}style={{fontSize:11,color:C.g,lineHeight:1.55}}>{item.detail}</E>
+        </div>)}
+      </div></FI>
+    </Sec>
+
+    {/* ═══ 5. DIRECTION ═══ */}
+    <Sec id="direction" bg="#fff">
+      <ST sub="Use platform capabilities where they're strong. Keep investing in what only we can build." e={ed}>How We Get There</ST>
+      <FI><div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))",gap:12}}>
+        {[
+          {icon:"🔌",title:"Cowork for self-service",desc:"Managers and marketers use Cowork to explore data, run analyses, and ask questions. We connect it to our brain MCP servers and approved skills. No custom build needed for ad-hoc work. This is already happening: pipeline dashboards and win/loss analyses have been built with Claude Code + Salesforce in hours.",color:C.purple},
+          {icon:"⚡",title:"n8n for always-on automation",desc:"Coaching, qualification scoring, SSR triggers, daily briefings. Everything that has to run 24/7 without someone at their desk. Cowork is a desktop app and can't do this. n8n can, and already does.",color:C.am},
+          {icon:"🧠",title:"Brains as shared MCP servers",desc:"Opp Brain, Customer Brain, Marketing Accounts Brain, all exposed as MCP endpoints. Any interface, whether Slack, Cowork, or an API, connects to the same intelligence. We build once, it works through every channel.",color:C.t},
+          {icon:"📚",title:"Skills in GitHub",desc:"One repo with three levels: global, team, personal. A skill-creator agent handles creation through Slack so nobody touches GitHub directly. Version-controlled. Anyone can contribute.",color:C.gr},
+        ].map((card,i)=><div key={i}className="gcell"style={{padding:"18px",borderRadius:12,border:`1.5px solid ${card.color}25`,background:card.color+"04"}}>
+          <div style={{fontSize:22,marginBottom:8}}>{card.icon}</div>
+          <div style={{fontSize:14,fontWeight:700,color:C.b,marginBottom:6}}>{card.title}</div>
+          <E tag="div"e={ed}style={{fontSize:11,color:C.g,lineHeight:1.6}}>{card.desc}</E>
+        </div>)}
+      </div></FI>
+      <FI delay={100}><div style={{marginTop:16,padding:"14px 18px",borderRadius:10,background:C.b,color:"#fff"}}>
+        <E tag="div"e={ed}style={{fontSize:12,lineHeight:1.65}}>
+          <span style={{color:C.y,fontWeight:700}}>Over time, the ratio will change.</span> Platform capabilities will handle more and more of the connectors and basic tooling. What we'll keep building in-house is the Bloomreach-specific intelligence: coaching rubrics, qualification models, domain context. No vendor has that. That's where we invest.
+        </E>
+      </div></FI>
+    </Sec>
+
+    {/* ═══ 6. PLATFORMS (collapsible) ═══ */}
+    <Sec id="platforms" bg={C.bg}>
+      <ST sub="For those who want to see the platform tradeoffs." e={ed}>Platforms</ST>
+      <FI><PlatformNote e={ed}/></FI>
+    </Sec>
+
+    {/* ═══ 7. EVOLUTION ═══ */}
+    <Sec id="evolution" bg="#fff">
+      <ST e={ed}>How We Got Here</ST>
+      <FI><div style={{display:"flex",gap:12,flexWrap:"wrap",alignItems:"stretch"}}>
+        <div style={{flex:"1 1 280px",borderRadius:12,padding:"18px",border:"1.5px solid #e5e7eb",background:"#fafafa"}}>
+          <div style={{fontSize:10,fontWeight:800,color:C.g,letterSpacing:1.5,textTransform:"uppercase",marginBottom:12}}>H2 2025</div>
+          {["15+ agents built from scratch","Custom ingestion pipelines and vector store","One person builds and maintains everything","Prompts embedded inside n8n workflows","Proved KPI impact on win rate, velocity, efficiency"].map(t=><div key={t}style={{fontSize:11,color:C.g,padding:"5px 0",borderBottom:"1px solid #f1f5f9"}}>{t}</div>)}
+        </div>
+        <div style={{display:"flex",alignItems:"center",fontSize:28,color:C.t,padding:"0 4px"}}>→</div>
+        <div style={{flex:"1 1 280px",borderRadius:12,padding:"18px",border:`1.5px solid ${C.t}40`,background:C.t+"04"}}>
+          <div style={{fontSize:10,fontWeight:800,color:C.t,letterSpacing:1.5,textTransform:"uppercase",marginBottom:12}}>2026</div>
+          {[
+            "Brains as MCP servers, build once, works everywhere",
+            "Cowork for self-service, n8n for automation",
+            "Skills in GitHub, maintained by the team",
+            "Small team with clear ownership and mandate",
+            "Single measurement cockpit across the full grid",
+          ].map(t=><div key={t}style={{fontSize:11,color:C.b,padding:"5px 0",borderBottom:`1px solid ${C.t}12`}}>{t}</div>)}
+        </div>
+      </div></FI>
+      <FI delay={100}><div style={{marginTop:24}}>
+        <div style={{fontSize:14,fontWeight:700,color:C.b,marginBottom:10}}>What we've learned</div>
+        {[
+          {insight:"Gem: 10x daily usage, zero enablement. CharacterQuilt: near-zero, full team support.",lesson:"Distribution matters more than features."},
+          {insight:"Low discovery scores have never converted to a won deal. It took months of data to see this.",lesson:"Proprietary measurement data compounds over time."},
+          {insight:"Post-demo coaching: consistent 4% month-on-month improvement.",lesson:"Autonomous agents change behavior. SaaS dashboards don't."},
+          {insight:"Loopio, CharacterQuilt: near-zero adoption despite full rollouts.",lesson:"Build for the workflow, not for a new UI."},
+        ].map((it,j)=><div key={j}style={{display:"flex",gap:12,fontSize:11,lineHeight:1.6,padding:"8px 0",borderBottom:j<3?"1px solid #f1f5f9":"none"}}>
+          <span style={{flex:"1 1 55%",color:C.b}}>{it.insight}</span>
+          <span style={{flex:"1 1 45%",color:C.t,fontWeight:600}}>→ {it.lesson}</span>
+        </div>)}
+      </div></FI>
+    </Sec>
+
+    {/* ═══ 8. TEAM ═══ */}
+    <Sec id="team" bg={C.bg}>
+      <ST sub="One function that owns strategy, standards, architecture, and measurement." e={ed}>One GTM AI Function</ST>
+      <FI><div>
+        <div style={{background:C.b,borderRadius:12,padding:"16px 20px",marginBottom:10,color:"#fff"}}>
+          <div style={{fontSize:16,fontWeight:800,color:C.y}}>Director, GTM AI</div>
+          <E tag="div"e={ed}style={{fontSize:12,opacity:.8,marginTop:4,lineHeight:1.5}}>Strategy, architecture, measurement, platform decisions, vendor relations, cross-functional alignment.</E>
+        </div>
+        <div style={{display:"flex",gap:10,flexWrap:"wrap",marginBottom:10}}>
+          <div style={{flex:"1 1 220px",borderRadius:10,padding:"14px 16px",border:`2px solid ${C.gr}`,background:C.gr+"06"}}>
+            <div style={{fontSize:12,fontWeight:700,color:C.gr}}>Context Engineer</div>
+            <E tag="div"e={ed}style={{fontSize:11,color:C.g,marginTop:3,lineHeight:1.5}}>Knowledge graph, data pipelines, Forge development, integration maintenance, skills development.</E>
+          </div>
+          <div style={{flex:"1 1 220px",borderRadius:10,padding:"14px 16px",border:`2px solid ${C.am}`,background:C.am+"06"}}>
+            <div style={{fontSize:12,fontWeight:700,color:C.am}}>Second hire (TBD)</div>
+            <E tag="div"e={ed}style={{fontSize:11,color:C.g,marginTop:3,lineHeight:1.5}}>Scope depends on priorities. Could focus on existing business agents, marketing brain, or scaling current agents.</E>
+          </div>
+        </div>
+        <E tag="div"e={ed}style={{fontSize:12,color:C.g,lineHeight:1.65,fontStyle:"italic",marginTop:8}}>
+          Small team because the platform does the heavy lifting. As impact proves out across new business, existing business, and marketing, the function grows.
+        </E>
+        <div style={{marginTop:16,display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(170px,1fr))",gap:8}}>
+          {[
+            {title:"One strategy",desc:"Every GTM AI initiative evaluated against the same revenue criteria."},
+            {title:"One architecture",desc:"Shared brains, shared connectors, shared skills. No duplication across teams."},
+            {title:"One measurement",desc:"Single dashboard tracking impact across the full value grid."},
+            {title:"One team",desc:"Clear ownership. Clear accountability. Fast decisions."},
+          ].map((x,i)=><div key={i}style={{padding:"12px",borderRadius:8,background:"#fff",border:"1px solid #e5e7eb"}}>
+            <div style={{fontSize:12,fontWeight:700,color:C.t,marginBottom:3}}>{x.title}</div>
+            <E tag="div"e={ed}style={{fontSize:10,color:C.g,lineHeight:1.5}}>{x.desc}</E>
+          </div>)}
+        </div>
+      </div></FI>
+    </Sec>
+
+    {/* ═══ 9. RISKS ═══ */}
+    <Sec id="risk" bg="#fff">
+      <ST e={ed}>What This Needs</ST>
+      <FI><div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:28}}>
+        {[
+          {t:"Strong mandate with clear ownership",d:"Someone has to decide what gets built, set standards across GTM AI, measure impact, and cut what doesn't work. The scope already operates at this level. The title and mandate should match."},
+          {t:"Consolidation of GTM AI work",d:"All agent initiatives under one strategy. Every investment evaluated against the same framework. No parallel efforts building disconnected tools."},
+          {t:"Clarity on where this function sits",d:"This function serves Revenue, Marketing, and Customer Success. Its organizational home should reflect that."},
+        ].map((item,i)=><div key={i}style={{display:"flex",gap:12,padding:"14px 16px",borderRadius:10,background:C.bg,border:"1px solid #e5e7eb"}}>
+          <div style={{width:28,height:28,minWidth:28,borderRadius:"50%",background:C.t,display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontWeight:800,fontSize:13,flexShrink:0}}>{i+1}</div>
+          <div>
+            <div style={{fontSize:13,fontWeight:700,color:C.b,marginBottom:2}}>{item.t}</div>
+            <E tag="div"e={ed}style={{fontSize:11,color:C.g,lineHeight:1.6}}>{item.d}</E>
+          </div>
+        </div>)}
+      </div></FI>
+      <div style={{marginBottom:14}}><h3 style={{fontSize:18,fontWeight:800,color:C.b}}>What Happens If We Don't</h3><div style={{width:40,height:3,background:C.rd,borderRadius:2,marginTop:8}}/></div>
+      <FI><div style={{background:C.rd+"05",border:`1px solid ${C.rd}15`,borderRadius:12,padding:"16px 18px"}}>
+        {[
+          "Multiple teams adopt AI independently. Contradictory conclusions about the same deals. Duplicated effort. No shared intelligence.",
+          "AI initiatives multiply without measurement. Nobody knows what actually moves pipeline.",
+          "Our 6-month head start erodes. Other companies adopt platform tools faster using the playbook we built first.",
+          "Autonomous agents (coaching, qualification, briefings) can't run on ad-hoc tools. Those capabilities stop working.",
+          "Every new hire rebuilds from scratch instead of building on a governed platform.",
+        ].map((t,i)=><div key={i}style={{display:"flex",gap:10,fontSize:12,color:C.b,lineHeight:1.6,marginBottom:i<4?10:0}}>
+          <span style={{color:C.rd,fontWeight:700,flexShrink:0,fontSize:14}}>✕</span>
+          <E tag="span"e={ed}>{t}</E>
+        </div>)}
+      </div></FI>
+    </Sec>
+
+    {/* ═══ CLOSING ═══ */}
+    <div style={{background:C.b,padding:"40px 24px",textAlign:"center",position:"relative",overflow:"hidden"}}>
+      <div style={{position:"absolute",inset:0,backgroundImage:"radial-gradient(circle at 1px 1px, rgba(255,255,255,.03) 1px, transparent 0)",backgroundSize:"32px 32px"}}/>
+      <div style={{position:"relative",zIndex:1}}>
+        <E tag="p"e={ed}style={{maxWidth:560,margin:"0 auto",fontSize:14,color:"#9ca3af",lineHeight:1.75}}>
+          GTM Brain changes how Bloomreach sells. Not by giving people more data, but by telling them what to do with it and doing it for them. The platform shift makes the plumbing cheaper over time. What stays hard is knowing what to build, whether it's working, and what comes next. That's what this function owns.
+        </E>
+        <div style={{marginTop:20,display:"flex",justifyContent:"center",gap:20,flexWrap:"wrap"}}>
+          {["↑ Pipeline","↑ Win rate","↑ Sales velocity","↑ ARR / FTE","↓ Churn"].map(k=><span key={k}style={{fontSize:12,color:C.y,fontWeight:700}}>{k}</span>)}
+        </div>
+      </div>
+    </div>
+  </div>;
+}
+
+ReactDOM.render(React.createElement(App),document.getElementById("root"));
+</script>
+</body>
+</html>
