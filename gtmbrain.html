@@ -293,6 +293,52 @@ function ValueGrid({e}){
           </div>
         })}
       </div>)}
+
+      {/* Value row — one per column */}
+      <div style={{display:"grid",gridTemplateColumns:"90px 1fr 1fr 1fr",gap:6,marginTop:2}}>
+        <div style={{display:"flex",alignItems:"center",padding:"6px 2px"}}>
+          <div style={{fontSize:11,fontWeight:700,color:C.b}}>Value</div>
+        </div>
+
+        {/* Cowork value */}
+        <div style={{padding:"12px",borderRadius:10,background:C.purple+"08",border:`1.5px solid ${C.purple}20`}}>
+          <svg width="100%"height="32"viewBox="0 0 200 32">
+            <rect x="0"y="14"width="30"height="4"rx="2"fill={C.purple+"30"}/>
+            <rect x="0"y="14"width="8"height="4"rx="2"fill={C.purple}/>
+            <text x="36"y="18"fontSize="8"fill={C.g}fontFamily="Poppins">today</text>
+            <rect x="80"y="14"width="30"height="4"rx="2"fill={C.purple+"30"}/>
+            <rect x="80"y="14"width="26"height="4"rx="2"fill={C.purple}/>
+            <text x="116"y="18"fontSize="8"fill={C.g}fontFamily="Poppins">with Cowork</text>
+            <line x1="65"y1="16"x2="75"y2="16"stroke={C.purple}strokeWidth="1.5"/>
+            <polygon points="73,13 78,16 73,19"fill={C.purple}/>
+          </svg>
+          <E tag="div"e={e}style={{fontSize:10,color:C.b,lineHeight:1.5,marginTop:2}}>Unlocks pipeline decisions Marketing can't make easily today (GTM play performance, segment targeting, product gap response, competitive intel)</E>
+        </div>
+
+        {/* Slack value */}
+        <div style={{padding:"12px",borderRadius:10,background:C.t+"08",border:`1.5px solid ${C.t}20`}}>
+          <svg width="100%"height="32"viewBox="0 0 200 32">
+            {[0,1,2,3,4,5,6].map(i=><circle key={i}cx={10+i*14}cy="16"r="5"fill={i<5?C.t:C.t+"30"}stroke="none"/>)}
+            <text x="112"y="19"fontSize="8"fill={C.g}fontFamily="Poppins">high adoption, proven</text>
+          </svg>
+          <E tag="div"e={e}style={{fontSize:10,color:C.b,lineHeight:1.5,marginTop:2}}>Already adopted across Revenue. Proven impact on win rate and sales cycle time. Fast to roll out to new teams.</E>
+        </div>
+
+        {/* Autonomous value */}
+        <div style={{padding:"12px",borderRadius:10,background:C.gr+"08",border:`1.5px solid ${C.gr}20`}}>
+          <svg width="100%"height="32"viewBox="0 0 200 32">
+            <line x1="5"y1="26"x2="50"y2="26"stroke={C.g+"40"}strokeWidth="1"/>
+            <line x1="5"y1="26"x2="15"y2="18"stroke={C.gr}strokeWidth="1.5"/>
+            <line x1="15"y1="18"x2="25"y2="20"stroke={C.gr}strokeWidth="1.5"/>
+            <line x1="25"y1="20"x2="35"y2="12"stroke={C.gr}strokeWidth="1.5"/>
+            <line x1="35"y1="12"x2="50"y2="6"stroke={C.gr}strokeWidth="1.5"/>
+            <circle cx="50"cy="6"r="2.5"fill={C.gr}/>
+            <text x="58"y="10"fontSize="8"fill={C.g}fontFamily="Poppins">scales with volume</text>
+          </svg>
+          <E tag="div"e={e}style={{fontSize:10,color:C.b,lineHeight:1.5,marginTop:2}}>Impacts all metrics, especially ARR/FTE. Every opp gets coached, scored, and briefed whether we have 200 or 400 next quarter. High adoption because there's nothing to adopt.</E>
+        </div>
+      </div>
+
     </div></div>
 
     {/* Legend */}
